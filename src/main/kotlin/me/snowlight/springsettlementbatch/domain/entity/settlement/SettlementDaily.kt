@@ -27,7 +27,7 @@ data class SettlementDaily (
     @Comment("세금 유형 : 관세, 면세, 영세, ")
     @Column(length = 4, nullable = false)
     val tasType: String = "TAX",  // TODO ENUM
-    @Comment("판매 유형 : 위탁(CONSIGNMENT), 메인(Purchase)")
+    @Comment("판매 유형 : 위탁(CONSIGNMENT), 매입(PURCHASE)")
     @Column(nullable = false)
     val sellType: String = "CONSIGNMENT", // TODO ENUM
     @Comment("PG 판매 금액")
