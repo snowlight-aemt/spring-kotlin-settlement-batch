@@ -8,6 +8,7 @@ import org.springframework.batch.core.configuration.annotation.JobScope
 import org.springframework.batch.core.job.builder.JobBuilder
 import org.springframework.batch.core.repository.JobRepository
 import org.springframework.batch.core.step.builder.StepBuilder
+import org.springframework.batch.item.ItemProcessor
 import org.springframework.batch.item.data.RepositoryItemReader
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
@@ -37,11 +38,16 @@ class PurchaseConfirmedJobConfig(
     @Bean
     @JobScope
     fun purchaseConfirmedJobStep(): Step {
-        return StepBuilder("${JOB_NAME}_STEP", jobRepository)
+        return StepBuilder("${JOB_NAME}_step", jobRepository)
             .chunk<OrderItem, OrderItem>(chunkSize, transactionManager) // SimpleStepBuilder // TODO 공부 필요 chunk 방식 말고 다른 방식이 있다?
-            .reader(repositoryItemReader)     // TODO reader, processor, writer 각각의 기능에 대해서 공부
-//            .processor()
+            .reader(repositoryItemReader)                   // TODO reader, processor, writer 각각의 기능에 대해서 공부
+            .processor(purchaseCompletedProcessor())
 //            .writer()
             .build()
+    }
+
+    @Bean
+    fun purchaseCompletedProcessor(): ItemProcessor<OrderItem, OrderItem> {
+        return PurchaseCompletedProcessor();
     }
 }
