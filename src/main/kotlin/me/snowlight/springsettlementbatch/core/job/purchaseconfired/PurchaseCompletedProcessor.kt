@@ -7,6 +7,7 @@ import java.time.ZonedDateTime
 
 class PurchaseCompletedProcessor: ItemProcessor<OrderItem, OrderItem> {
     override fun process(item: OrderItem): OrderItem {
+        println(">> Processor")
         println(item.toString())
         return item.copy(id = item.id, purchaseConfirmedAt = ZonedDateTime.now())
     }

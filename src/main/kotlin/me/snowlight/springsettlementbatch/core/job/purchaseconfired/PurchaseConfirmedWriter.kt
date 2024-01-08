@@ -14,6 +14,7 @@ class PurchaseConfirmedWriter(
     private val orderItemRepository: OrderItemRepository,
 ): ItemWriter<OrderItem> {
     override fun write(chunk: Chunk<out OrderItem>) {
+        println(">> Writer")
         chunk.items.forEach { orderItemRepository.save(it) }
     }
 }
