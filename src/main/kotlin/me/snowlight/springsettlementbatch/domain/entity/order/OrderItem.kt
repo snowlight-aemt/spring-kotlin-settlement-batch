@@ -13,7 +13,7 @@ import java.time.ZonedDateTime
 @Table(name = "order_item")
 data class OrderItem(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order-item-no")
+    @Column(name = "order_item_no")
     val id: Long,
     @Comment("주문원장")
     @Column(nullable = false)
