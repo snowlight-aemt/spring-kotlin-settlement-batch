@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.transaction.annotation.EnableTransactionManagement
 
-@Configuration
+//@Configuration
 //@EnableBatchProcessing        // BATCH 5 이후 부터 필요
 @EnableTransactionManagement
 class PurchaseConfirmedJobConfig(
