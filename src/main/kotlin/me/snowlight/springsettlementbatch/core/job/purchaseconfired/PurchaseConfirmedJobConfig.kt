@@ -1,10 +1,11 @@
 package me.snowlight.springsettlementbatch.core.job.purchaseconfired
 
+import me.snowlight.springsettlementbatch.core.job.purchaseconfired.delivery.PurchaseCompletedProcessor
+import me.snowlight.springsettlementbatch.core.job.purchaseconfired.delivery.PurchaseConfirmedWriter
 import me.snowlight.springsettlementbatch.domain.entity.order.OrderItem
 import me.snowlight.springsettlementbatch.infrastructure.database.repository.OrderItemRepository
 import org.springframework.batch.core.Job
 import org.springframework.batch.core.Step
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing
 import org.springframework.batch.core.configuration.annotation.JobScope
 import org.springframework.batch.core.job.builder.JobBuilder
 import org.springframework.batch.core.repository.JobRepository
@@ -18,7 +19,7 @@ import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.transaction.annotation.EnableTransactionManagement
 
 @Configuration
-//@EnableBatchProcessing
+//@EnableBatchProcessing        // BATCH 5 이후 부터 필요
 @EnableTransactionManagement
 class PurchaseConfirmedJobConfig(
     private val jobRepository: JobRepository,

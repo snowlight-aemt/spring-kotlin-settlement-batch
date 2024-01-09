@@ -13,7 +13,7 @@ import org.hibernate.annotations.Comment
 import java.time.ZonedDateTime
 
 @Entity
-@Table(name = "claim_origin")
+@Table
 data class ClaimReceipt(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "claim_receipt_no")
