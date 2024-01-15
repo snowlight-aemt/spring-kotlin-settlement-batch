@@ -18,36 +18,43 @@ data class SettlementDaily (
     @Column(name = "settlement_no")
     val id: Long = 0L,
     val settlementDate: LocalDate,
+    @Column(nullable = false)
     val orderNo: Long,
-    val claimReceiptNo: Long,
+    @Column(nullable = false)
+    val orderItemNo: Long,
+    @Column(nullable = false)
+    val orderCount: Int = 1,
+    val claimReceiptNo: Long? = null,
     val sellerNo: Long,
 
     val sellerName: String,
-    val sellerBusinessNo: String,
+    val sellerBusinessNo: Int?,
     @Comment("세금 유형 : 관세, 면세, 영세, ")
     @Column(length = 4, nullable = false)
-    val tasType: String = "TAX",  // TODO ENUM
+    val taxType: String = "TAX",  // TODO ENUM
     @Comment("판매 유형 : 위탁(CONSIGNMENT), 매입(PURCHASE)")
     @Column(nullable = false)
     val sellType: String = "CONSIGNMENT", // TODO ENUM
     @Comment("PG 판매 금액")
     @Column(precision = 14, scale = 5, nullable = false)
-    val pgSalesAmount: BigDecimal,
+    val pgSalesAmount: BigDecimal = BigDecimal.ZERO,
     @Comment("쿠폰 할인 금액")
     @Column(precision = 14, scale = 5, nullable = false)
-    val couponDiscountAmount: BigDecimal,
+    val couponDiscountAmount: BigDecimal = BigDecimal.ZERO,
     @Comment("마일리지 사용 금액")
     @Column(precision = 14, scale = 5, nullable = false)
-    val mileageUsageAmount: BigDecimal,
+    val mileageUsageAmount: BigDecimal = BigDecimal.ZERO,
     @Comment("발생 배송비 금액")
     @Column(precision = 14, scale = 5, nullable = false)
-    val shippingFeeAmount: BigDecimal,
+    val shippingFeeAmount: BigDecimal = BigDecimal.ZERO,
     @Comment("발생 클레임 배송비 금액")
     @Column(precision = 14, scale = 5, nullable = false)
-    val claimShippingFeeAmount: BigDecimal,
+    val claimShippingFeeAmount: BigDecimal? = BigDecimal.ZERO,
     @Comment("수수료 금액")
     @Column(precision = 14, scale = 5, nullable = false)
-    val commissionAmount: BigDecimal,
+    val commissionAmount: BigDecimal = BigDecimal.ZERO,
+    @Column(nullable = false)
+    val taxAmount: BigDecimal? = BigDecimal.ZERO,
     val createdBy: ZonedDateTime = ZonedDateTime.now(),
     val updatedBy: ZonedDateTime = ZonedDateTime.now(),
     val deletedBy: ZonedDateTime? = null,
