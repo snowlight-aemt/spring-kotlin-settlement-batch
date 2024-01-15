@@ -1,11 +1,11 @@
 package me.snowlight.springsettlementbatch.core.job.purchaseconfired
 
+import me.snowlight.springsettlementbatch.core.job.purchaseconfired.daily.DailySettlementProcessor
 import me.snowlight.springsettlementbatch.core.job.purchaseconfired.delivery.PurchaseCompletedProcessor
 import me.snowlight.springsettlementbatch.core.job.purchaseconfired.delivery.PurchaseConfirmedWriter
 import me.snowlight.springsettlementbatch.domain.entity.order.OrderItem
 import me.snowlight.springsettlementbatch.domain.entity.settlement.SettlementDaily
 import me.snowlight.springsettlementbatch.infrastructure.database.repository.OrderItemRepository
-import org.aspectj.weaver.ast.Or
 import org.springframework.batch.core.Job
 import org.springframework.batch.core.Step
 import org.springframework.batch.core.configuration.annotation.JobScope
@@ -70,6 +70,12 @@ class PurchaseConfirmedJobConfig(
         return StepBuilder("${JOB_NAME}_dailySettlement_step", jobRepository)
             .chunk<OrderItem, SettlementDaily>(chunkSize, transactionManager)
             .reader(dailySettlementJpaItemReader)
+            .processor(dailySettlementProcessor())
             .build()
+    }
+
+    @Bean
+    fun dailySettlementProcessor(): DailySettlementProcessor {
+        return DailySettlementProcessor();
     }
 }

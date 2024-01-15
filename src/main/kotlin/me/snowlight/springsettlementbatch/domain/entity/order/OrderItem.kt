@@ -5,6 +5,8 @@ import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 import org.hibernate.annotations.Comment
 import java.time.ZonedDateTime
@@ -21,6 +23,9 @@ data class OrderItem(
     @Comment("주문 상품 스넵샵")
     @Column(nullable = false)
     val orderItemSnapshotNo: Long,
+    @OneToOne
+    @JoinColumn(name = "order_item_snapshot_no", referencedColumnName = "id", insertable = false, updatable = false)
+    val orderItemSnapshot: OrderItemSnapshot,
     @Comment("주문 수량")
     @Column(nullable = false)
     val orderCount: Int = 1,

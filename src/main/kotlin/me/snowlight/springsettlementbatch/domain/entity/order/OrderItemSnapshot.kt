@@ -5,7 +5,11 @@ import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
+import me.snowlight.springsettlementbatch.domain.entity.Product
+import me.snowlight.springsettlementbatch.domain.entity.Seller
 import org.hibernate.annotations.Comment
 import java.math.BigDecimal
 
@@ -38,4 +42,10 @@ data class OrderItemSnapshot(
     @Comment("상품 유형")
     @Column(nullable = false)
     val itemCategory: Int = 0, // TODO ENUM
+    @ManyToOne
+    @JoinColumn(name = "seller_no", referencedColumnName = "id", insertable = false, updatable = false)
+    val seller: Seller,
+    @ManyToOne
+    @JoinColumn(name = "product_no", referencedColumnName = "id", insertable = false, updatable = false)
+    val product: Product,
 )
