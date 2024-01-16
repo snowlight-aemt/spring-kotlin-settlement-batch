@@ -1,6 +1,7 @@
 package me.snowlight.springsettlementbatch.domain.entity.order
 
 import jakarta.persistence.Column
+import jakarta.persistence.Convert
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
@@ -10,6 +11,7 @@ import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import me.snowlight.springsettlementbatch.domain.entity.Product
 import me.snowlight.springsettlementbatch.domain.entity.Seller
+import me.snowlight.springsettlementbatch.domain.enums.TaxType
 import org.hibernate.annotations.Comment
 import java.math.BigDecimal
 
@@ -35,7 +37,8 @@ data class OrderItemSnapshot(
     val defaultDeliveryAmount: BigDecimal = BigDecimal.valueOf(3000),
     @Comment("세금유형")
     @Column(length = 4, nullable = false)
-    val taxType: String = "TAX", // TODO ENUM
+    @Convert(converter = TaxType::class)
+    val taxType: TaxType? = TaxType.TAX,
     @Comment("세금")
     @Column(nullable = false)
     val taxRate: Int = 3,

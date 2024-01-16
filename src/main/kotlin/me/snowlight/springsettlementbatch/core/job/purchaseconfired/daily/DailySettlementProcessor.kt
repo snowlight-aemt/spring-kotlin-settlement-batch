@@ -1,5 +1,6 @@
 package me.snowlight.springsettlementbatch.core.job.purchaseconfired.daily
 
+import me.snowlight.springsettlementbatch.domain.collection.TaxCalculator
 import me.snowlight.springsettlementbatch.domain.entity.order.OrderItem
 import me.snowlight.springsettlementbatch.domain.entity.settlement.SettlementDaily
 import org.springframework.batch.item.ItemProcessor
@@ -13,7 +14,8 @@ class DailySettlementProcessor: ItemProcessor<OrderItem, SettlementDaily> {
         val count = orderItem.orderCount
 
         // 세금 계산
-        val taxAmount: BigDecimal = BigDecimal.ZERO
+        val taxCalculator = TaxCalculator(orderItemSnapshot)
+        val taxAmount: BigDecimal = taxCalculator.getTaxAmount()
 
         // 정산금액에 필요한 데이터 만들기
         val commissionAmount: BigDecimal = BigDecimal.ZERO

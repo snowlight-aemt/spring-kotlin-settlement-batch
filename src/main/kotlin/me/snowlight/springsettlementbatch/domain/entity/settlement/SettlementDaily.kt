@@ -1,11 +1,14 @@
 package me.snowlight.springsettlementbatch.domain.entity.settlement
 
 import jakarta.persistence.Column
+import jakarta.persistence.Convert
+import jakarta.persistence.Converter
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
+import me.snowlight.springsettlementbatch.domain.enums.TaxType
 import org.hibernate.annotations.Comment
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -31,7 +34,8 @@ data class SettlementDaily (
     val sellerBusinessNo: Int?,
     @Comment("세금 유형 : 관세, 면세, 영세, ")
     @Column(length = 4, nullable = false)
-    val taxType: String = "TAX",  // TODO ENUM
+    @Convert(converter = TaxType::class)
+    val taxType: TaxType? = TaxType.TAX,
     @Comment("판매 유형 : 위탁(CONSIGNMENT), 매입(PURCHASE)")
     @Column(nullable = false)
     val sellType: String = "CONSIGNMENT", // TODO ENUM
