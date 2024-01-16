@@ -25,13 +25,16 @@ data class OrderItemSnapshot(
     val sellerNo: Long,
     @Comment("판매가")
     @Column(precision = 14, scale = 5, nullable = false)
-    val sellPrice: BigDecimal = BigDecimal.ZERO,
+    val sellPrice: BigDecimal? = BigDecimal.ZERO,
     @Comment("공급가")
     @Column(precision = 14, scale = 5, nullable = false)
     val supplyPrice: BigDecimal = BigDecimal.ZERO,
     @Comment("할인 가격")
     @Column(precision = 14, scale = 5, nullable = false)
     val promotionAmount: BigDecimal = BigDecimal.ZERO,
+    @Comment("마일리지 가격")
+    @Column(precision = 14, scale = 5, nullable = false)
+    val mileageUsageAmount: BigDecimal = BigDecimal.ZERO,
     @Comment("배송비")
     @Column(precision = 14, scale = 5, nullable = false)
     val defaultDeliveryAmount: BigDecimal = BigDecimal.valueOf(3000),

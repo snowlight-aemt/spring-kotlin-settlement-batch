@@ -1,5 +1,7 @@
 package me.snowlight.springsettlementbatch.core.job.purchaseconfired.daily
 
+import me.snowlight.springsettlementbatch.domain.collection.CommissionAmountCalculator
+import me.snowlight.springsettlementbatch.domain.collection.PgSalesAmountCalculator
 import me.snowlight.springsettlementbatch.domain.collection.TaxCalculator
 import me.snowlight.springsettlementbatch.domain.entity.order.OrderItem
 import me.snowlight.springsettlementbatch.domain.entity.settlement.SettlementDaily
@@ -12,15 +14,18 @@ class DailySettlementProcessor: ItemProcessor<OrderItem, SettlementDaily> {
         val orderItemSnapshot = orderItem.orderItemSnapshot
         val seller = orderItemSnapshot.seller
         val count = orderItem.orderCount
+        val countToBigDecimal = count.toBigDecimal()
 
         // 세금 계산
         val taxCalculator = TaxCalculator(orderItemSnapshot)
-        val taxAmount: BigDecimal = taxCalculator.getTaxAmount()
+        val taxAmount: BigDecimal = taxCalculator.getTaxAmount().multiply(countToBigDecimal)
 
         // 정산금액에 필요한 데이터 만들기
-        val commissionAmount: BigDecimal = BigDecimal.ZERO
-        val pgSalesAmount: BigDecimal = BigDecimal.ZERO
-        
+        val pgSalesAmountCalculator = PgSalesAmountCalculator(orderItemSnapshot)
+        val pgSalesAmount: BigDecimal = pgSalesAmountCalculator.getPgSaleAmount().multiply(countToBigDecimal)
+        val commissionAmountCalculator = CommissionAmountCalculator(orderItemSnapshot)
+        val commissionAmount: BigDecimal = commissionAmountCalculator.getCommissionAmount().multiply(countToBigDecimal)
+
         return SettlementDaily(
             settlementDate = LocalDate.now(),
             orderNo = orderItem.orderNo,
