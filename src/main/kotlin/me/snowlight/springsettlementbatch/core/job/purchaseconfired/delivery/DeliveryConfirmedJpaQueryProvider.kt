@@ -1,4 +1,4 @@
-package me.snowlight.springsettlementbatch.core.job.purchaseconfired
+package me.snowlight.springsettlementbatch.core.job.purchaseconfired.delivery
 
 import jakarta.persistence.Query
 import me.snowlight.springsettlementbatch.domain.entity.order.OrderItem
@@ -13,8 +13,12 @@ class DeliveryConfirmedJpaQueryProvider(
         val query = this.entityManager.createQuery(
             """
                 SELECT oi 
-                  FROM OrderItem oi 
+                  FROM OrderItem oi
+                  LEFT JOIN ClaimReceipt cr
+                    ON oi.orderNo = cr.orderNo
                  WHERE oi.shippedCompleteAt BETWEEN :startDateTime AND :endDateTime
+                   AND oi.purchaseConfirmedAt IS NULL
+                   AND (cr.orderNo IS NULL OR cr.completedAt IS NOT NULL)
             """,
             OrderItem::class.java
         )

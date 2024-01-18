@@ -1,4 +1,4 @@
-package me.snowlight.springsettlementbatch.core.job.purchaseconfired
+package me.snowlight.springsettlementbatch.core.job.purchaseconfired.delivery
 
 import me.snowlight.springsettlementbatch.domain.entity.order.OrderItem
 import org.springframework.batch.item.ItemProcessor

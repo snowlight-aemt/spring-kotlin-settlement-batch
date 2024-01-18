@@ -1,8 +1,7 @@
-package me.snowlight.springsettlementbatch.core.job.purchaseconfired
+package me.snowlight.springsettlementbatch.core.job.purchaseconfired.delivery
 
 import me.snowlight.springsettlementbatch.domain.entity.order.OrderItem
 import me.snowlight.springsettlementbatch.infrastructure.database.repository.OrderItemRepository
-import org.hibernate.annotations.Comment
 import org.springframework.batch.item.Chunk
 import org.springframework.batch.item.ItemWriter
 import org.springframework.stereotype.Component
