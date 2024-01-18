@@ -1,11 +1,13 @@
 package me.snowlight.springsettlementbatch.core.job.purchaseconfired
 
+import me.snowlight.springsettlementbatch.core.job.purchaseconfired.daily.DailySettlementItemWriter
 import me.snowlight.springsettlementbatch.core.job.purchaseconfired.daily.DailySettlementProcessor
 import me.snowlight.springsettlementbatch.core.job.purchaseconfired.delivery.PurchaseCompletedProcessor
 import me.snowlight.springsettlementbatch.core.job.purchaseconfired.delivery.PurchaseConfirmedWriter
 import me.snowlight.springsettlementbatch.domain.entity.order.OrderItem
 import me.snowlight.springsettlementbatch.domain.entity.settlement.SettlementDaily
 import me.snowlight.springsettlementbatch.infrastructure.database.repository.OrderItemRepository
+import me.snowlight.springsettlementbatch.infrastructure.database.repository.SettlementDailyRepository
 import org.springframework.batch.core.Job
 import org.springframework.batch.core.Step
 import org.springframework.batch.core.configuration.annotation.JobScope
@@ -31,6 +33,7 @@ class PurchaseConfirmedJobConfig(
     @Qualifier("dailySettlementJpaItemReader")
     private val dailySettlementJpaItemReader: JpaPagingItemReader<OrderItem>,
     private val orderItemRepository: OrderItemRepository,
+    private val settlementDailyRepository: SettlementDailyRepository,
 ) {
     val JOB_NAME = "purchaseConfirmedJob"
     val chunkSize = 500
@@ -71,11 +74,17 @@ class PurchaseConfirmedJobConfig(
             .chunk<OrderItem, SettlementDaily>(chunkSize, transactionManager)
             .reader(dailySettlementJpaItemReader)
             .processor(dailySettlementProcessor())
+            .writer(dailySettlementItemWriter())
             .build()
     }
 
     @Bean
     fun dailySettlementProcessor(): DailySettlementProcessor {
         return DailySettlementProcessor();
+    }
+
+    @Bean
+    fun dailySettlementItemWriter(): DailySettlementItemWriter {
+        return DailySettlementItemWriter(settlementDailyRepository);
     }
 }
