@@ -1,7 +1,6 @@
 package me.snowlight.springsettlementbatch.domain.entity.order
 
 import jakarta.persistence.Column
-import jakarta.persistence.Convert
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
@@ -19,10 +18,10 @@ import java.math.BigDecimal
 @Table(name = "order_item_snapshot")
 data class OrderItemSnapshot(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_item_snapshot")
+    @Column(name = "order_item_snapshot_no")
     val id: Long = 0,
-    val productNo: Long,
-    val sellerNo: Long,
+//    val productNo: Long,
+//    val sellerNo: Long,
     @Comment("판매가")
     @Column(precision = 14, scale = 5, nullable = false)
     val sellPrice: BigDecimal? = BigDecimal.ZERO,
@@ -40,7 +39,6 @@ data class OrderItemSnapshot(
     val defaultDeliveryAmount: BigDecimal = BigDecimal.valueOf(3000),
     @Comment("세금유형")
     @Column(length = 4, nullable = false)
-    @Convert(converter = TaxType::class)
     val taxType: TaxType? = TaxType.TAX,
     @Comment("세금")
     @Column(nullable = false)
@@ -49,9 +47,9 @@ data class OrderItemSnapshot(
     @Column(nullable = false)
     val itemCategory: Int = 0, // TODO ENUM
     @ManyToOne
-    @JoinColumn(name = "seller_no", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "seller_no", insertable = false, updatable = false)
     val seller: Seller,
     @ManyToOne
-    @JoinColumn(name = "product_no", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "product_no", insertable = false, updatable = false)
     val product: Product,
 )

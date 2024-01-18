@@ -1,8 +1,6 @@
 package me.snowlight.springsettlementbatch.domain.entity.settlement
 
 import jakarta.persistence.Column
-import jakarta.persistence.Convert
-import jakarta.persistence.Converter
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
@@ -34,7 +32,6 @@ data class SettlementDaily (
     val sellerBusinessNo: Int?,
     @Comment("세금 유형 : 관세, 면세, 영세, ")
     @Column(length = 4, nullable = false)
-    @Convert(converter = TaxType::class)
     val taxType: TaxType? = TaxType.TAX,
     @Comment("판매 유형 : 위탁(CONSIGNMENT), 매입(PURCHASE)")
     @Column(nullable = false)

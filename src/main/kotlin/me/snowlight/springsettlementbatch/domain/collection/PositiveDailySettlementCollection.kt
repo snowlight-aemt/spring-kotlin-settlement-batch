@@ -27,7 +27,7 @@ class PositiveDailySettlementCollection(private val orderItem: OrderItem) {
             orderNo = orderItem.orderNo,
             orderCount = count,
             orderItemNo = orderItem.id,
-            sellerNo = orderItemSnapshot.sellerNo,
+            sellerNo = seller.id,
             sellerBusinessNo = seller.businessNo,
             sellerName = seller.sellerName,
             sellType = seller.sellType,

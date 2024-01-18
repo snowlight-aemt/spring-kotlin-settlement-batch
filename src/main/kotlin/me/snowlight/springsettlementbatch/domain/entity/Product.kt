@@ -6,8 +6,8 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
+import me.snowlight.springsettlementbatch.domain.enums.TaxType
 import org.hibernate.annotations.Comment
-import org.springframework.data.annotation.CreatedBy
 import java.math.BigDecimal
 import java.time.ZonedDateTime
 
@@ -25,7 +25,7 @@ data class Product(
 
     @Comment("세금유형")
     @Column(length = 4, nullable = false)
-    val taxType: String = "TAX",
+    val taxType: TaxType? = TaxType.TAX,
     @Comment("판매가")
     @Column(precision = 14, scale = 5, nullable = false)
     val sellPrice: BigDecimal = BigDecimal.ZERO,

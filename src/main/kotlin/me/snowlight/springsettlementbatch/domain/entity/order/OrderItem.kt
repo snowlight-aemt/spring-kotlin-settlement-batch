@@ -20,11 +20,11 @@ data class OrderItem(
     @Comment("주문원장")
     @Column(nullable = false)
     val orderNo: Long,
-    @Comment("주문 상품 스넵샵")
-    @Column(nullable = false)
-    val orderItemSnapshotNo: Long,
+//    @Comment("주문 상품 스넵샵")
+//    @Column(name = "order_item_snapshot_no", nullable = false)
+//    val orderItemSnapshotNo: Long,
     @OneToOne
-    @JoinColumn(name = "order_item_snapshot_no", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "order_item_snapshot_no", insertable = false, updatable = false)
     val orderItemSnapshot: OrderItemSnapshot,
     @Comment("주문 수량")
     @Column(nullable = false)
