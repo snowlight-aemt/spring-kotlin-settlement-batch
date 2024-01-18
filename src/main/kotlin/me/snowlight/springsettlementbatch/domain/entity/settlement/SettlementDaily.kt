@@ -29,7 +29,7 @@ data class SettlementDaily (
     val sellerNo: Long,
 
     val sellerName: String,
-    val sellerBusinessNo: Int?,
+    val sellerBusinessNumber: Int?,
     @Comment("세금 유형 : 관세, 면세, 영세, ")
     @Column(length = 4, nullable = false)
     val taxType: TaxType? = TaxType.TAX,
