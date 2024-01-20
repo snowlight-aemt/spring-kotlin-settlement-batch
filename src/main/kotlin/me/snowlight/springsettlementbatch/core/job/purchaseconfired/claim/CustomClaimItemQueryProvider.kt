@@ -12,7 +12,7 @@ class CustomClaimItemQueryProvider: AbstractJpaQueryProvider() {
                  FROM ClaimItem ci
                  LEFT JOIN SettlementDaily sd ON ci.claimReceipt.id = sd.claimReceiptNo
                  JOIN ClaimReceipt cr ON ci.claimReceipt.id = cr.id
-                WHERE sd.claimReceiptNo IS NULL 
+                WHERE sd.id IS NULL 
                   AND cr.completedAt IS NOT NULL 
             """,
             ClaimItem::class.java
