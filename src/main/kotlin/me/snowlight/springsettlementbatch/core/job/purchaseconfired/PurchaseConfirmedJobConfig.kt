@@ -1,5 +1,6 @@
 package me.snowlight.springsettlementbatch.core.job.purchaseconfired
 
+import me.snowlight.springsettlementbatch.core.job.purchaseconfired.claim.ClaimDailySettlementItemWriter
 import me.snowlight.springsettlementbatch.core.job.purchaseconfired.claim.ClaimDailySettlementProcessor
 import me.snowlight.springsettlementbatch.core.job.purchaseconfired.daily.DailySettlementItemWriter
 import me.snowlight.springsettlementbatch.core.job.purchaseconfired.daily.DailySettlementProcessor
@@ -100,11 +101,17 @@ class PurchaseConfirmedJobConfig(
             .chunk<ClaimItem, SettlementDaily>(chunkSize, transactionManager)
             .reader(claimDailySettlementJpaItemReader)
             .processor(claimDailySettlementProcessor())
+            .writer(claimDailySettlementItemWriter())
             .build()
     }
 
     @Bean
     fun claimDailySettlementProcessor(): ClaimDailySettlementProcessor {
         return ClaimDailySettlementProcessor();
+    }
+
+    @Bean
+    fun claimDailySettlementItemWriter(): ClaimDailySettlementItemWriter {
+        return ClaimDailySettlementItemWriter(settlementDailyRepository);
     }
 }
