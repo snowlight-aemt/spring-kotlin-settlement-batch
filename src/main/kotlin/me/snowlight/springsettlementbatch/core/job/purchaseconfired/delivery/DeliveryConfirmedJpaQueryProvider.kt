@@ -10,6 +10,7 @@ class DeliveryConfirmedJpaQueryProvider(
     private val endDateTime: ZonedDateTime,
 ): AbstractJpaQueryProvider() {
     override fun createQuery(): Query {
+        // TODO 질문 : 주문 상품 중 하나의 상품이라도 클레임이 있을 경우 모든 상품이 확정에서 제외된다, 따라서 정상에도 폼
         val query = this.entityManager.createQuery(
             """
                 SELECT oi 
