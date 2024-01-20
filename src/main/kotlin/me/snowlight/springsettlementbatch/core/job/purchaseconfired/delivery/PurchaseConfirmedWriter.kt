@@ -5,7 +5,6 @@ import me.snowlight.springsettlementbatch.infrastructure.database.repository.Ord
 import org.springframework.batch.item.Chunk
 import org.springframework.batch.item.ItemWriter
 
-//@Component
 class PurchaseConfirmedWriter(
     private val orderItemRepository: OrderItemRepository,
 ): ItemWriter<OrderItem> {

@@ -3,7 +3,7 @@ package me.snowlight.springsettlementbatch.domain.enums
 import jakarta.persistence.AttributeConverter
 import jakarta.persistence.Converter
 
-@Converter
+@Converter(autoApply = true)
 class ClaimStatusConverter: AttributeConverter<ClaimStatus, Int> {
     override fun convertToDatabaseColumn(attribute: ClaimStatus?): Int {
         return attribute?.value ?: throw IllegalArgumentException("Invalid ClaimStatus value")

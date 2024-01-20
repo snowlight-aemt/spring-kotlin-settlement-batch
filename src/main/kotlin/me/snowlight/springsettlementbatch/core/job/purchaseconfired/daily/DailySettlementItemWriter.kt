@@ -4,11 +4,7 @@ import me.snowlight.springsettlementbatch.domain.entity.settlement.SettlementDai
 import me.snowlight.springsettlementbatch.infrastructure.database.repository.SettlementDailyRepository
 import org.springframework.batch.item.Chunk
 import org.springframework.batch.item.ItemWriter
-import org.springframework.stereotype.Component
-import org.springframework.transaction.annotation.Transactional
 
-@Component
-@Transactional
 class DailySettlementItemWriter(
     private val settlementDailyRepository: SettlementDailyRepository,
 ): ItemWriter<SettlementDaily> {
