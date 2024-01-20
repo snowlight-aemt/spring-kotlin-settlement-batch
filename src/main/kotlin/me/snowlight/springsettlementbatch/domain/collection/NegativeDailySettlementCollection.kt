@@ -2,7 +2,6 @@ package me.snowlight.springsettlementbatch.domain.collection
 
 import me.snowlight.springsettlementbatch.domain.entity.claim.ClaimItem
 import me.snowlight.springsettlementbatch.domain.entity.settlement.SettlementDaily
-import java.math.BigDecimal
 import java.time.LocalDate
 
 class NegativeDailySettlementCollection(private val item: ClaimItem) {
@@ -22,7 +21,7 @@ class NegativeDailySettlementCollection(private val item: ClaimItem) {
         val commissionAmount = CommissionAmountCalculator(orderItemSnapshot)
             .getCommissionAmount().multiply(countToBigDecimal)
 
-        val claimShippingFeeAmount = BigDecimal.ZERO
+        val claimShippingFeeAmount = ClaimShippedAmountCalculator(item).getClaimShippedAmount()
 
         return SettlementDaily(
             settlementDate = LocalDate.now(),
