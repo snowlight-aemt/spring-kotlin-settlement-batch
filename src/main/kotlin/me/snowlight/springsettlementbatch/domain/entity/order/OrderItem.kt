@@ -16,7 +16,7 @@ import java.time.ZonedDateTime
 data class OrderItem(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_item_no")
-    val id: Long,
+    val id: Long = -1L,
     @Comment("주문원장")
     @Column(nullable = false)
     val orderNo: Long,

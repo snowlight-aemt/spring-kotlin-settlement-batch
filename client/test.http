@@ -3,3 +3,6 @@ PUT http://localhost:8080/claim/complete/claim_no/1
 
 ### job
 GET http://localhost:8080/api/settlement/daily
+
+### create order
+POST http://localhost:8080/test/dummy/size/500
