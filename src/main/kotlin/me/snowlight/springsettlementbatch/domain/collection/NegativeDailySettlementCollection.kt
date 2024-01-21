@@ -16,10 +16,15 @@ class NegativeDailySettlementCollection(private val item: ClaimItem) {
         val taxCalculator = TaxCalculator(orderItemSnapshot)
         val taxAmount = taxCalculator.getTaxAmount().multiply(countToBigDecimal)
 
-        val pgSalesAmount = PgSalesAmountCalculator(orderItemSnapshot)
-            .getPgSaleAmount().multiply(countToBigDecimal)
+        val orderItemSnapshot1 = PgSalesAmountMaterial(
+            sellPrice = orderItemSnapshot.sellPrice,
+            promotionAmount = orderItemSnapshot.promotionAmount,
+            mileageUsageAmount = orderItemSnapshot.mileageUsageAmount,
+        )
+        val pgSalesAmount = PgSalesAmountCalculator(orderItemSnapshot1)
+                                .getPgSaleAmount().multiply(countToBigDecimal)
         val commissionAmount = CommissionAmountCalculator(orderItemSnapshot)
-            .getCommissionAmount().multiply(countToBigDecimal)
+                                    .getCommissionAmount().multiply(countToBigDecimal)
 
         val claimShippingFeeAmount = ClaimShippedAmountCalculator(item).getClaimShippedAmount()
 

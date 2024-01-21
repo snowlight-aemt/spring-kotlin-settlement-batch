@@ -17,7 +17,12 @@ class PositiveDailySettlementCollection(private val orderItem: OrderItem) {
         val taxAmount: BigDecimal = taxCalculator.getTaxAmount().multiply(countToBigDecimal)
 
         // 정산금액에 필요한 데이터 만들기
-        val pgSalesAmountCalculator = PgSalesAmountCalculator(orderItemSnapshot)
+        val orderItemSnapshot1 = PgSalesAmountMaterial(
+            sellPrice = orderItemSnapshot.sellPrice,
+            promotionAmount = orderItemSnapshot.promotionAmount,
+            mileageUsageAmount = orderItemSnapshot.mileageUsageAmount,
+        )
+        val pgSalesAmountCalculator = PgSalesAmountCalculator(orderItemSnapshot1)
         val pgSalesAmount: BigDecimal = pgSalesAmountCalculator.getPgSaleAmount().multiply(countToBigDecimal)
         val commissionAmountCalculator = CommissionAmountCalculator(orderItemSnapshot)
         val commissionAmount: BigDecimal = commissionAmountCalculator.getCommissionAmount().multiply(countToBigDecimal)
