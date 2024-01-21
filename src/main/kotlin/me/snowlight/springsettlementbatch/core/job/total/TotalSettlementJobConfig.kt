@@ -1,6 +1,7 @@
 package me.snowlight.springsettlementbatch.core.job.total
 
 import me.snowlight.springsettlementbatch.domain.entity.settlement.SettlementTotal
+import me.snowlight.springsettlementbatch.infrastructure.database.repository.SettlementTotalRepository
 import org.springframework.batch.core.Job
 import org.springframework.batch.core.Step
 import org.springframework.batch.core.configuration.annotation.JobScope
@@ -14,13 +15,14 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.transaction.annotation.EnableTransactionManagement
 
-@Configuration
+//@Configuration
 @EnableTransactionManagement
 class TotalSettlementJobConfig(
     private val jobRepository: JobRepository,
     private val transactionManager: PlatformTransactionManager,
     @Qualifier("totalSettlementJpaItemReader")
-    private val totalSettlementJpaItemReader: JpaPagingItemReader<SummingSettlementResponse>
+    private val totalSettlementJpaItemReader: JpaPagingItemReader<SummingSettlementResponse>,
+    private val settlementTotalRepository: SettlementTotalRepository,
 ) {
     // 집계를 위한 JOB
     private val JOB_NAME = "totalSettlementJob"
@@ -41,9 +43,13 @@ class TotalSettlementJobConfig(
             .chunk<SummingSettlementResponse, SettlementTotal>(chunkSize, transactionManager)
             .reader(totalSettlementJpaItemReader)
             .processor(totalSettlementProcessor())
+            .writer(totalSettlementItemWriter())
             .build()
     }
 
     @Bean
     fun totalSettlementProcessor() = TotalSettlementItemProcessor()
+
+    @Bean
+    fun totalSettlementItemWriter() = TotalSettlementItemWriter(settlementTotalRepository);
 }
