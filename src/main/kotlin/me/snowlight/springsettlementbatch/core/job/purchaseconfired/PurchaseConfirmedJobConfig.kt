@@ -6,6 +6,7 @@ import me.snowlight.springsettlementbatch.core.job.purchaseconfired.daily.DailyS
 import me.snowlight.springsettlementbatch.core.job.purchaseconfired.daily.DailySettlementProcessor
 import me.snowlight.springsettlementbatch.core.job.purchaseconfired.delivery.PurchaseCompletedProcessor
 import me.snowlight.springsettlementbatch.core.job.purchaseconfired.delivery.PurchaseConfirmedWriter
+import me.snowlight.springsettlementbatch.core.listener.PurchaseConfirmedChunkListener
 import me.snowlight.springsettlementbatch.domain.entity.claim.ClaimItem
 import me.snowlight.springsettlementbatch.domain.entity.order.OrderItem
 import me.snowlight.springsettlementbatch.domain.entity.settlement.SettlementDaily
@@ -60,6 +61,7 @@ class PurchaseConfirmedJobConfig(
             .reader(deliveryCompletedJpaItemReader)                   // TODO reader, processor, writer 각각의 기능에 대해서 공부
             .processor(purchaseCompletedProcessor())
             .writer(purchaseConfirmedWriter())
+            .listener(PurchaseConfirmedChunkListener())
             .build()
     }
 
