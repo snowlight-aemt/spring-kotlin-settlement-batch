@@ -45,5 +45,5 @@ class TotalSettlementJobConfig(
     }
 
     @Bean
-    fun totalSettlementProcessor() = TotalSettlementProcessor()
+    fun totalSettlementProcessor() = TotalSettlementItemProcessor()
 }

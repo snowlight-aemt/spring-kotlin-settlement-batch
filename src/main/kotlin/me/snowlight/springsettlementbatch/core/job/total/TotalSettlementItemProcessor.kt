@@ -4,7 +4,7 @@ import me.snowlight.springsettlementbatch.domain.entity.settlement.SettlementTot
 import org.springframework.batch.item.ItemProcessor
 import java.time.LocalDate
 
-class TotalSettlementProcessor
+class TotalSettlementItemProcessor
     : ItemProcessor<SummingSettlementResponse, SettlementTotal> {
 
     override fun process(item: SummingSettlementResponse): SettlementTotal {
