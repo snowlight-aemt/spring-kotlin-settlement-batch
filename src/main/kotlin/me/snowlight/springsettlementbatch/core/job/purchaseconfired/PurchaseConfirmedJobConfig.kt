@@ -1,9 +1,13 @@
 package me.snowlight.springsettlementbatch.core.job.purchaseconfired
 
+import me.snowlight.springsettlementbatch.core.job.purchaseconfired.claim.ClaimDailySettlementItemWriter
+import me.snowlight.springsettlementbatch.core.job.purchaseconfired.claim.ClaimDailySettlementProcessor
 import me.snowlight.springsettlementbatch.core.job.purchaseconfired.daily.DailySettlementItemWriter
 import me.snowlight.springsettlementbatch.core.job.purchaseconfired.daily.DailySettlementProcessor
 import me.snowlight.springsettlementbatch.core.job.purchaseconfired.delivery.PurchaseCompletedProcessor
 import me.snowlight.springsettlementbatch.core.job.purchaseconfired.delivery.PurchaseConfirmedWriter
+import me.snowlight.springsettlementbatch.core.listener.PurchaseConfirmedChunkListener
+import me.snowlight.springsettlementbatch.domain.entity.claim.ClaimItem
 import me.snowlight.springsettlementbatch.domain.entity.order.OrderItem
 import me.snowlight.springsettlementbatch.domain.entity.settlement.SettlementDaily
 import me.snowlight.springsettlementbatch.infrastructure.database.repository.OrderItemRepository
@@ -23,7 +27,7 @@ import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.transaction.annotation.EnableTransactionManagement
 
 @Configuration
-//@EnableBatchProcessing        // BATCH 5 이후 부터 필요
+//@EnableBatchProcessing        // BATCH 5 이후 부터 필요 없음 따라서, 주석 처리
 @EnableTransactionManagement
 class PurchaseConfirmedJobConfig(
     private val jobRepository: JobRepository,
@@ -32,6 +36,8 @@ class PurchaseConfirmedJobConfig(
     private val deliveryCompletedJpaItemReader: JpaPagingItemReader<OrderItem>,
     @Qualifier("dailySettlementJpaItemReader")
     private val dailySettlementJpaItemReader: JpaPagingItemReader<OrderItem>,
+    @Qualifier("claimDailySettlementJpaItemReader")
+    private val claimDailySettlementJpaItemReader: JpaPagingItemReader<ClaimItem>,
     private val orderItemRepository: OrderItemRepository,
     private val settlementDailyRepository: SettlementDailyRepository,
 ) {
@@ -43,6 +49,7 @@ class PurchaseConfirmedJobConfig(
         return JobBuilder(JOB_NAME, jobRepository)
             .start(purchaseConfirmedJobStep())  // SimpleJobBuilder
             .next(dailySettlementJobStep())
+            .next(claimDailySettlementJobStep())
             .build()
     }
 
@@ -54,6 +61,7 @@ class PurchaseConfirmedJobConfig(
             .reader(deliveryCompletedJpaItemReader)                   // TODO reader, processor, writer 각각의 기능에 대해서 공부
             .processor(purchaseCompletedProcessor())
             .writer(purchaseConfirmedWriter())
+            .listener(PurchaseConfirmedChunkListener())
             .build()
     }
 
@@ -86,5 +94,26 @@ class PurchaseConfirmedJobConfig(
     @Bean
     fun dailySettlementItemWriter(): DailySettlementItemWriter {
         return DailySettlementItemWriter(settlementDailyRepository);
+    }
+
+    @Bean
+    @JobScope
+    fun claimDailySettlementJobStep(): Step {
+        return StepBuilder("${JOB_NAME}_claimDailySettlement_step", jobRepository)
+            .chunk<ClaimItem, SettlementDaily>(chunkSize, transactionManager)
+            .reader(claimDailySettlementJpaItemReader)
+            .processor(claimDailySettlementProcessor())
+            .writer(claimDailySettlementItemWriter())
+            .build()
+    }
+
+    @Bean
+    fun claimDailySettlementProcessor(): ClaimDailySettlementProcessor {
+        return ClaimDailySettlementProcessor();
+    }
+
+    @Bean
+    fun claimDailySettlementItemWriter(): ClaimDailySettlementItemWriter {
+        return ClaimDailySettlementItemWriter(settlementDailyRepository);
     }
 }

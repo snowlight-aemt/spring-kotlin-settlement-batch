@@ -1,31 +1,32 @@
 package me.snowlight.springsettlementbatch.domain.collection
 
-import me.snowlight.springsettlementbatch.domain.entity.order.OrderItem
+import me.snowlight.springsettlementbatch.domain.entity.claim.ClaimItem
 import me.snowlight.springsettlementbatch.domain.entity.settlement.SettlementDaily
-import java.math.BigDecimal
 import java.time.LocalDate
 
-class PositiveDailySettlementCollection(private val orderItem: OrderItem) {
+class NegativeDailySettlementCollection(private val item: ClaimItem) {
     fun getSettlementDaily(): SettlementDaily {
+        val orderItem = item.orderItem
         val orderItemSnapshot = orderItem.orderItemSnapshot
         val seller = orderItemSnapshot.seller
-        val count = orderItem.orderCount
+
+        val count = item.claimCount ?: -1
         val countToBigDecimal = count.toBigDecimal()
 
-        // 세금 계산
         val taxCalculator = TaxCalculator(orderItemSnapshot)
-        val taxAmount: BigDecimal = taxCalculator.getTaxAmount().multiply(countToBigDecimal)
+        val taxAmount = taxCalculator.getTaxAmount().multiply(countToBigDecimal)
 
-        // 정산금액에 필요한 데이터 만들기
         val orderItemSnapshot1 = PgSalesAmountMaterial(
             sellPrice = orderItemSnapshot.sellPrice,
             promotionAmount = orderItemSnapshot.promotionAmount,
             mileageUsageAmount = orderItemSnapshot.mileageUsageAmount,
         )
-        val pgSalesAmountCalculator = PgSalesAmountCalculator(orderItemSnapshot1)
-        val pgSalesAmount: BigDecimal = pgSalesAmountCalculator.getPgSaleAmount().multiply(countToBigDecimal)
-        val commissionAmountCalculator = CommissionAmountCalculator(orderItemSnapshot)
-        val commissionAmount: BigDecimal = commissionAmountCalculator.getCommissionAmount().multiply(countToBigDecimal)
+        val pgSalesAmount = PgSalesAmountCalculator(orderItemSnapshot1)
+                                .getPgSaleAmount().multiply(countToBigDecimal)
+        val commissionAmount = CommissionAmountCalculator(orderItemSnapshot)
+                                    .getCommissionAmount().multiply(countToBigDecimal)
+
+        val claimShippingFeeAmount = ClaimShippedAmountCalculator(item).getClaimShippedAmount()
 
         return SettlementDaily(
             settlementDate = LocalDate.now(),
@@ -40,6 +41,11 @@ class PositiveDailySettlementCollection(private val orderItem: OrderItem) {
             taxAmount = taxAmount,
             commissionAmount = commissionAmount,
             pgSalesAmount = pgSalesAmount,
+            couponDiscountAmount = orderItemSnapshot.promotionAmount,
+            mileageUsageAmount = orderItemSnapshot.mileageUsageAmount,
+            shippingFeeAmount = orderItemSnapshot.defaultDeliveryAmount,
+            claimReceiptNo = item.claimReceipt.id,
+            claimShippingFeeAmount = claimShippingFeeAmount,
         )
     }
 }

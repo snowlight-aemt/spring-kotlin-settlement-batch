@@ -2,7 +2,6 @@ package me.snowlight.springsettlementbatch.core.job.purchaseconfired.delivery
 
 import me.snowlight.springsettlementbatch.domain.entity.order.OrderItem
 import org.springframework.batch.item.ItemProcessor
-import org.springframework.context.annotation.Configuration
 import java.time.ZonedDateTime
 
 class PurchaseCompletedProcessor: ItemProcessor<OrderItem, OrderItem> {
