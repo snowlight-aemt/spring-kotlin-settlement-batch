@@ -21,7 +21,7 @@ data class SettlementTotal (
     val sellerNo: Long,
 
     val sellerName: String,
-    val sellerBusinessNo: String,
+    val sellerBusinessNumber: String?,
     @Comment("세금 유형 : 관세, 면세, 영세, ")
     @Column(length = 4, nullable = false)
     val tasType: String = "TAX",  // TODO ENUM
@@ -46,6 +46,9 @@ data class SettlementTotal (
     @Comment("수수료 금액")
     @Column(precision = 14, scale = 5, nullable = false)
     val commissionAmount: BigDecimal,
+    @Comment("세금 금액")
+    @Column(precision = 14, scale = 5, nullable = false)
+    val taxAmount: BigDecimal,
     val createdBy: ZonedDateTime = ZonedDateTime.now(),
     val updatedBy: ZonedDateTime = ZonedDateTime.now(),
     val deletedBy: ZonedDateTime? = null,

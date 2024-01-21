@@ -40,6 +40,10 @@ class TotalSettlementJobConfig(
         return StepBuilder("${JOB_NAME}_step", jobRepository)
             .chunk<SummingSettlementResponse, SettlementTotal>(chunkSize, transactionManager)
             .reader(totalSettlementJpaItemReader)
+            .processor(totalSettlementProcessor())
             .build()
     }
+
+    @Bean
+    fun totalSettlementProcessor() = TotalSettlementProcessor()
 }
