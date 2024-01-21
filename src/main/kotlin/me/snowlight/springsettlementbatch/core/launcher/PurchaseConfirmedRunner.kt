@@ -5,7 +5,7 @@ import org.springframework.batch.core.JobParameters
 import org.springframework.batch.core.launch.JobLauncher
 import org.springframework.stereotype.Component
 
-//@Component
+@Component
 class PurchaseConfirmedRunner(
     private val jobLauncher: JobLauncher,
     private val purchaseConfirmedJob: Job
