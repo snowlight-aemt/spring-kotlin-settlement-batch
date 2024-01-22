@@ -1,5 +1,6 @@
 package me.snowlight.springsettlementbatch.core.job.purchaseconfired
 
+import jakarta.persistence.EntityManager
 import me.snowlight.springsettlementbatch.core.job.purchaseconfired.claim.ClaimDailySettlementItemWriter
 import me.snowlight.springsettlementbatch.core.job.purchaseconfired.claim.ClaimDailySettlementProcessor
 import me.snowlight.springsettlementbatch.core.job.purchaseconfired.daily.DailySettlementItemWriter
@@ -19,12 +20,18 @@ import org.springframework.batch.core.job.builder.JobBuilder
 import org.springframework.batch.core.repository.JobRepository
 import org.springframework.batch.core.step.builder.StepBuilder
 import org.springframework.batch.item.ItemProcessor
+import org.springframework.batch.item.database.JdbcBatchItemWriter
+import org.springframework.batch.item.database.JpaItemWriter
 import org.springframework.batch.item.database.JpaPagingItemReader
+import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.transaction.annotation.EnableTransactionManagement
+import java.time.ZonedDateTime
+import javax.sql.DataSource
 
 @Configuration
 //@EnableBatchProcessing        // BATCH 5 이후 부터 필요 없음 따라서, 주석 처리
@@ -40,6 +47,8 @@ class PurchaseConfirmedJobConfig(
     private val claimDailySettlementJpaItemReader: JpaPagingItemReader<ClaimItem>,
     private val orderItemRepository: OrderItemRepository,
     private val settlementDailyRepository: SettlementDailyRepository,
+    private val dataSource: DataSource,
+    private val entityManager: EntityManager,
 ) {
     val JOB_NAME = "purchaseConfirmedJob"
     val chunkSize = 500
@@ -61,6 +70,8 @@ class PurchaseConfirmedJobConfig(
             .reader(deliveryCompletedJpaItemReader)                   // TODO reader, processor, writer 각각의 기능에 대해서 공부
             .processor(purchaseCompletedProcessor())
             .writer(purchaseConfirmedWriter())
+//            .writer(purchaseConfirmedJdbcItemWriter())
+//            .writer(purchaseConfirmedJpaItemWriter())
             .listener(PurchaseConfirmedChunkListener())
             .build()
     }
@@ -73,6 +84,34 @@ class PurchaseConfirmedJobConfig(
     @Bean
     fun purchaseConfirmedWriter(): PurchaseConfirmedWriter {
         return PurchaseConfirmedWriter(orderItemRepository);
+    }
+
+    // TODO JPA 영속성에 이슈가 있다.
+    @Bean
+    fun purchaseConfirmedJdbcItemWriter(): JdbcBatchItemWriter<OrderItem> {
+        val writer = JdbcBatchItemWriterBuilder<OrderItem>()
+            .dataSource(dataSource)
+            .sql("""
+                UPDATE order_item 
+                   SET purchase_confirmed_at = :purchaseConfirmedAt,
+                       updated_at = :updatedAt
+                 WHERE order_item_no = :id
+            """.trimIndent())
+            .itemSqlParameterSourceProvider {
+                val parameterSource = MapSqlParameterSource()
+                parameterSource.addValue("purchaseConfirmedAt", ZonedDateTime.now())
+                parameterSource.addValue("updatedAt", ZonedDateTime.now())
+                parameterSource.addValue("id", it.id)
+            }
+            .build()
+        return writer
+    }
+
+    @Bean
+    fun purchaseConfirmedJpaItemWriter(): JpaItemWriter<OrderItem> {
+        val writer = JpaItemWriter<OrderItem>()
+        writer.setEntityManagerFactory(this.entityManager.entityManagerFactory)
+        return writer
     }
 
     @Bean

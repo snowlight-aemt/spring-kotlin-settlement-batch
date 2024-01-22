@@ -7,6 +7,7 @@ import org.springframework.batch.item.ItemProcessor
 
 class DailySettlementProcessor: ItemProcessor<OrderItem, SettlementDaily> {
     override fun process(orderItem: OrderItem): SettlementDaily {
+        println("DailySettlementProcessor >> ${orderItem.purchaseConfirmedAt} ")
         return PositiveDailySettlementCollection(orderItem).getSettlementDaily()
     }
 }
