@@ -1,5 +1,6 @@
-package me.snowlight.springsettlementbatch.domain
+package me.snowlight.springsettlementbatch.infrastructure.message
 
+import me.snowlight.springsettlementbatch.domain.OrderPurchaseConfirmedExecutor
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Component
 
