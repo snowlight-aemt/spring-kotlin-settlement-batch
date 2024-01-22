@@ -13,6 +13,7 @@ class ClaimCompleteConsumerForSettlement(
     private val claimItemRepository: ClaimItemRepository,
     private val settlementDailyRepository: SettlementDailyRepository,
 ) {
+    // TODO 멀티 컨슈머 ClaimCompleteConsumerForRefund 와 같이 동작
     @KafkaListener(topics = ["claimComplete"], groupId = "claim-consumer-group")
     fun listen(message: String) {
         try {
