@@ -20,7 +20,7 @@ data class ClaimItem(
     val id: Long = 0L,
 //    val claimReceiptNo: Long,
     @ManyToOne
-    @JoinColumn(name = " claim_receipt_no", insertable = false, updatable = false)
+    @JoinColumn(name = "claim_receipt_no", insertable = false, updatable = false)
     val claimReceipt: ClaimReceipt,
 
     @Column(nullable = false)
