@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController
 class ClaimCompleteController(
     private val claimCompleteFacade: ClaimCompleteFacade
 ) {
-
     @PutMapping("/claim_no/{claimNo}")
     fun completedOrder(@PathVariable claimNo: Long) {
         claimCompleteFacade.complete(claimNo)
